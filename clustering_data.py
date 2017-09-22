@@ -1,6 +1,6 @@
 import numpy as np
 from near_centroid import *
-
+from centroid_mean import *
 
 def load_data(filename):
     dataset = np.genfromtxt(filename, delimiter=' ',
@@ -16,16 +16,10 @@ def clustering(dataset, k):
     for index in range(k):
         centroids.append([dataset[index + 1], index + 1])
 
-    assignedClusters = np.array([], dtype=int)
+    assignedClusters = assign_centroids(dataset,centroids)
 
-    for data in dataset:
-        minor_dist = dist_centroid(data, centroids[0][0])
-        closest = centroids[0]
-        for centroid in centroids:
-            if(dist_centroid(data, centroid[0]) <= minor_dist):
-                closest = centroid
-        assignedClusters = np.append(assignedClusters, closest[1])
+    centralized = centroid_mean(centroids,assignedClusters,dataset)
 
-    return assignedClusters
+    return centralized
 
-print(clustering(load_data('iris.txt'), 3))
+clustering(load_data('iris.txt'), 3)
